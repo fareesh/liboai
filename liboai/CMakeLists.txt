@@ -8,6 +8,18 @@ if(MSVC)
   set(CMAKE_DEBUG_POSTFIX "d")
 endif()
 
+# Add vcpkg paths explicitly
+get_filename_component(VCPKG_ROOT "/home/fareesh/vcpkg" ABSOLUTE)
+set(VCPKG_INSTALLED_DIR "${VCPKG_ROOT}/installed/x64-linux")
+
+include_directories(
+    ${VCPKG_INSTALLED_DIR}/include
+)
+
+link_directories(
+    ${VCPKG_INSTALLED_DIR}/lib
+)
+
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(CURL REQUIRED)
 
