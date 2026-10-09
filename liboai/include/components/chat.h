@@ -886,6 +886,9 @@ namespace liboai {
 				@param logit_bias        Modify the likelihood of specified tokens appearing in the completion.
 				@param user              The user ID to associate with the request. This is used to
 										 prevent abuse of the API.
+				@param extra_body        Optional JSON object merged into the request body last.
+				                         Use it for provider-specific fields such as
+				                         reasoning_effort or OpenRouter reasoning.
 
 				@returns A liboai::Response object containing the
 					data in JSON format.
@@ -903,7 +906,8 @@ namespace liboai {
 				std::optional<float> presence_penalty = std::nullopt,
 				std::optional<float> frequency_penalty = std::nullopt,
 				std::optional<std::unordered_map<std::string, int8_t>> logit_bias = std::nullopt,
-				std::optional<std::string> user = std::nullopt
+				std::optional<std::string> user = std::nullopt,
+				std::optional<nlohmann::json> extra_body = std::nullopt
 			) const & noexcept(false);
 
 			/*
@@ -947,6 +951,9 @@ namespace liboai {
 				@param logit_bias        Modify the likelihood of specified tokens appearing in the completion.
 				@param user              The user ID to associate with the request. This is used to
 										 prevent abuse of the API.
+				@param extra_body        Optional JSON object merged into the request body last.
+				                         Use it for provider-specific fields such as
+				                         reasoning_effort or OpenRouter reasoning.
 
 				@returns A liboai::Response future containing the
 					data in JSON format.
@@ -964,7 +971,8 @@ namespace liboai {
 				std::optional<float> presence_penalty = std::nullopt,
 				std::optional<float> frequency_penalty = std::nullopt,
 				std::optional<std::unordered_map<std::string, int8_t>> logit_bias = std::nullopt,
-				std::optional<std::string> user = std::nullopt
+				std::optional<std::string> user = std::nullopt,
+				std::optional<nlohmann::json> extra_body = std::nullopt
 			) const & noexcept(false);
 			
 		private:

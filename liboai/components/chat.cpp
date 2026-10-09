@@ -630,7 +630,7 @@ bool liboai::Conversation::ParseStreamData(std::string data, std::string& delta_
 
 
 
-liboai::Response liboai::ChatCompletion::create(const std::string& model, Conversation& conversation, std::optional<std::string> function_call, std::optional<float> temperature, std::optional<float> top_p, std::optional<uint16_t> n, std::optional<ChatStreamCallback> stream, std::optional<std::vector<std::string>> stop, std::optional<uint16_t> max_tokens, std::optional<float> presence_penalty, std::optional<float> frequency_penalty, std::optional<std::unordered_map<std::string, int8_t>> logit_bias, std::optional<std::string> user) const& noexcept(false) {
+liboai::Response liboai::ChatCompletion::create(const std::string& model, Conversation& conversation, std::optional<std::string> function_call, std::optional<float> temperature, std::optional<float> top_p, std::optional<uint16_t> n, std::optional<ChatStreamCallback> stream, std::optional<std::vector<std::string>> stop, std::optional<uint16_t> max_tokens, std::optional<float> presence_penalty, std::optional<float> frequency_penalty, std::optional<std::unordered_map<std::string, int8_t>> logit_bias, std::optional<std::string> user, std::optional<nlohmann::json> extra_body) const& noexcept(false) {
 	liboai::JsonConstructor jcon;
 	jcon.push_back("model", model);
 	jcon.push_back("temperature", std::move(temperature));
@@ -672,6 +672,12 @@ liboai::Response liboai::ChatCompletion::create(const std::string& model, Conver
 		jcon.push_back("functions", conversation.GetFunctionsJSON()["functions"]);
 	}
 
+	if (extra_body) {
+		for (const auto& [key, value] : extra_body->items()) {
+			jcon.push_back(key, value);
+		}
+	}
+
 	Response res;
 	res = this->Request(
 		Method::HTTP_POST, this->openai_root_, "/chat/completions", "application/json",
@@ -688,8 +694,8 @@ liboai::Response liboai::ChatCompletion::create(const std::string& model, Conver
 	return res;
 }
 
-liboai::FutureResponse liboai::ChatCompletion::create_async(const std::string& model, Conversation& conversation, std::optional<std::string> function_call, std::optional<float> temperature, std::optional<float> top_p, std::optional<uint16_t> n, std::optional<ChatStreamCallback> stream, std::optional<std::vector<std::string>> stop, std::optional<uint16_t> max_tokens, std::optional<float> presence_penalty, std::optional<float> frequency_penalty, std::optional<std::unordered_map<std::string, int8_t>> logit_bias, std::optional<std::string> user) const& noexcept(false) {
-	return std::async(std::launch::async, &liboai::ChatCompletion::create, this, model, std::ref(conversation), function_call, temperature, top_p, n, stream, stop, max_tokens, presence_penalty, frequency_penalty, logit_bias, user);
+liboai::FutureResponse liboai::ChatCompletion::create_async(const std::string& model, Conversation& conversation, std::optional<std::string> function_call, std::optional<float> temperature, std::optional<float> top_p, std::optional<uint16_t> n, std::optional<ChatStreamCallback> stream, std::optional<std::vector<std::string>> stop, std::optional<uint16_t> max_tokens, std::optional<float> presence_penalty, std::optional<float> frequency_penalty, std::optional<std::unordered_map<std::string, int8_t>> logit_bias, std::optional<std::string> user, std::optional<nlohmann::json> extra_body) const& noexcept(false) {
+	return std::async(std::launch::async, &liboai::ChatCompletion::create, this, model, std::ref(conversation), function_call, temperature, top_p, n, stream, stop, max_tokens, presence_penalty, frequency_penalty, logit_bias, user, extra_body);
 }
 
 namespace liboai {
